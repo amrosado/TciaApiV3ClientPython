@@ -3,7 +3,7 @@ __author__ = 'arosado'
 import requests
 import json
 
-class TciApiClient:
+class TciaApiClient:
 
     apiKey = None
     baseUrl = None
@@ -11,13 +11,30 @@ class TciApiClient:
     apiFormat = None
     sharedResource = '/SharedList'
 
+    currentCollection = None
+    currentBodyPartExamined = None
+    currentModality = None
+    currentStudyInstanceUID = None
+    currentSeriesInstanceUID = None
+    currentPatientId = None
+    currentManufacturerModelName = None
+    currentDate = None
+    currentCollection = None
+
+    collectionValues = None
+
     apiConnectionSession = requests.session()
 
     def makeApiCall(self, queryUrl, queryParameters):
         try:
             queryRequest = self.apiConnectionSession.get(queryUrl, params=queryParameters)
 
-            if self.apiFormat == 'json':
+            if queryUrl == (self.apiResourceUrl + '/query/getImage'):
+                queryResponse = queryRequest.content
+                #zipFile = open('tciaZipTest.zip', mode='wb')
+                #zipFile.write(queryResponse)
+                #zipFile.close()
+            elif self.apiFormat == 'json':
                 queryResponse = json.loads(queryRequest.text)
             else:
                 queryResponse = queryRequest.text
